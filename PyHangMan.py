@@ -1,4 +1,10 @@
 import random
+import sys
+
+def clear_screen():
+    import os
+    os.system('cls' if os.name=='nt' else 'clear')
+
 
 def hard_mode():
     import json
@@ -15,44 +21,65 @@ def easy_mode():
     return list(secret)
 
 
-def print_output(guess, secret):
+def print_hangman(lives):
+    with open("Art/HangmanAscii", "r") as hangman_file:
+        hangman_lines = hangman_file.readlines()
+        for i in range((((lives + 1)* 7)-7), ((lives + 1)* 7), 1):
+            print (hangman_lines[i])
+
+
+def print_word(guess, secret):
     print(guess.upper() + " in in the word")
+    
+
+def print_title():
+    with open("Art/titleAscii", "r") as title_file:
+        for line in title_file:
+            print(line)
 
 
-def game():
+def game(dev_mode = False):
     secret = []
-    game_mode = input("Easy (e), or hard (h)? ").lower()
+    print_title()
+    game_mode = input("\nEasy (e), or hard (h)? ").lower()
     if game_mode == 'e':
         secret = easy_mode()
     elif game_mode == 'h':
         secret = hard_mode()
 
     word_length = len(secret)
-    print("There are " + str(word_length) + " letters")
-    print (secret)
+    print("\nThere are " + str(word_length) + " letters")
+    if dev_mode:
+        print ("".join(secret))
 
     keep_going = True
-    lives = 1
+    lives = 6
 
     while keep_going:
-        guess = input("enter a letter or guess the whole word: ").lower()
+        # clear_screen()
+        print("you have " + str(lives) + " lives remaining")
+        print_hangman(lives)
+        guess = input("\nEnter a letter or guess the whole word: ").lower()
+
         if list(guess) == secret:
             keep_going = False
-            print("YOU WIN")
+            print("\nYOU WIN")
         elif len(guess) == 1 and guess in secret:
-            print_output(guess, secret)
+            print_word(guess, secret)
         else:
             lives -= 1
+
             if lives == 0:
-                print("you lose!")
-                print("The word was "+ "".join(secret).upper())
+                print_hangman(lives)
+                print("\nYOU LOSE!")
+                print("\nThe word was "+ "".join(secret).upper())
                 keep_going = False
-            else:
-                print("incorrect, lose a life")
 
 
 try:
-    game()    
+    if len(sys.argv) == 2 and sys.argv[1] == 'd':
+        dev_mode = True
+    game(dev_mode)    
 except KeyboardInterrupt:
     print("\n\nexiting ...")
     SystemExit
