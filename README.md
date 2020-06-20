@@ -2,19 +2,13 @@
 
 This is the game of HangMan written in Python
 
-## Rough plan
+## To do
+Display word with underscores, replacing them when a char is identified
 
-Get list of words
-pick a random word from the list
-
-convert word to list
-
-show how many letters there are as underscores
-
-ask for a letter
-
-if not in word:
-    life -= 1
-    display new life
-else:
-    show underscores for unknown letters and display the now knwon letters
+## Done
+A choice of easy or hard words
+random word is chosen
+A command argument "d" to run in dev mode (shows the chosen word)
+The game keeps track of lives and will display them graphically
+will inform id letter or word is correct or incorrect
+Will gracefully exit if keyboard interupt is used (cmd+c)
