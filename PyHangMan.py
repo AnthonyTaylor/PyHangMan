@@ -25,7 +25,7 @@ def print_hangman(lives):
     with open("Art/HangmanAscii", "r") as hangman_file:
         hangman_lines = hangman_file.readlines()
         for i in range((((lives + 1)* 7)-7), ((lives + 1)* 7), 1):
-            print (hangman_lines[i])
+            print (hangman_lines[i].rstrip())
 
 
 def print_word(guess, secret):
@@ -35,7 +35,7 @@ def print_word(guess, secret):
 def print_title():
     with open("Art/titleAscii", "r") as title_file:
         for line in title_file:
-            print(line)
+            print(line.rstrip())
 
 
 def game(dev_mode = False):
@@ -77,6 +77,7 @@ def game(dev_mode = False):
 
 
 try:
+    dev_mode = False
     if len(sys.argv) == 2 and sys.argv[1] == 'd':
         dev_mode = True
     game(dev_mode)    
