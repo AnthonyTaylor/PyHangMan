@@ -28,9 +28,26 @@ def print_hangman(lives):
             print (hangman_lines[i].rstrip())
 
 
-def print_word(guess, secret):
-    print(guess.upper() + " in in the word")
+def print_word(guess, secret, known_letters):
+    if guess is not "":
+        print(guess.upper() + " in in the word")
+
+    response = []
+
+    for letter in secret:
+        if letter in known_letters:
+            response.append(letter)
+        else:
+            response.append("_ ")
     
+    print("".join(response).upper())
+
+    if response == secret:
+        print("\nYOU WIN")
+        return "win" 
+    else:
+         return "no win"
+   
 
 def print_title():
     with open("Art/titleAscii", "r") as title_file:
@@ -40,6 +57,7 @@ def print_title():
 
 def game(dev_mode = False):
     secret = []
+    known_letters = []
     print_title()
     game_mode = input("\nEasy (e), or hard (h)? ").lower()
     if game_mode == 'e':
@@ -56,31 +74,34 @@ def game(dev_mode = False):
     lives = 6
 
     while keep_going:
-        # clear_screen()
+        guess = ""
         print("you have " + str(lives) + " lives remaining")
         print_hangman(lives)
+        print_word(guess, secret, known_letters)
         guess = input("\nEnter a letter or guess the whole word: ").lower()
 
         if list(guess) == secret:
             keep_going = False
             print("\nYOU WIN")
         elif len(guess) == 1 and guess in secret:
-            print_word(guess, secret)
+            known_letters.append(guess)
+            if print_word(guess, secret, known_letters) == "win":
+                break
         else:
             lives -= 1
-
             if lives == 0:
                 print_hangman(lives)
                 print("\nYOU LOSE!")
                 print("\nThe word was "+ "".join(secret).upper())
                 keep_going = False
-
+            
 
 try:
     dev_mode = False
     if len(sys.argv) == 2 and sys.argv[1] == 'd':
         dev_mode = True
     game(dev_mode)    
+    input("Press Enter to exit ...")
 except KeyboardInterrupt:
     print("\n\nexiting ...")
     SystemExit
