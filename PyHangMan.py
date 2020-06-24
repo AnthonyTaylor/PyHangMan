@@ -8,14 +8,14 @@ def clear_screen():
 
 def hard_mode():
     import json
-    with open("Data/words_dictionary.json", "r") as word_file:
+    with open("Data/hard.json", "r") as word_file:
         word_list = json.load(word_file)
     secret = random.choice(list(word_list))
     return list(secret)
 
 
 def easy_mode():
-    with open("Data/simpleWords.txt", "r") as word_file:
+    with open("Data/easy.txt", "r") as word_file:
         word_list = word_file.readlines()
     secret = random.choice(word_list).rstrip()
     return list(secret)
