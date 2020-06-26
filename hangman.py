@@ -24,7 +24,7 @@ class HangMan:
         self.known_letters = []
         self.lives = 6
         self.dev_mode = mode
-        self.win = False
+        self.status = ""
         self.title = []
         self.hangman = []
 
@@ -39,15 +39,17 @@ class HangMan:
 
     def check_guess(self, guess):
         if list(guess) == self.secret:
-            self.win = True
+            self.status = "win"
         elif len(guess) == 1 and guess in self.secret:
             self.known_letters.append(guess)
+            # if all letters guessed
+            if sorted(list(set(self.secret))) == sorted(list(set(self.known_letters))):
+                self.status = "win"
         else:
             self.lives -= 1
             if self.lives == 0:
-                print("\nYOU LOSE!")
-                print("\nThe word was "+ "".join(self.secret).upper())
-                return False
+                self.status = "lose"
+
 
 
     def print_screen_head(self):
@@ -77,17 +79,27 @@ class HangMan:
 
 
 def game(dev_mode = False):
+    # choose difficulty
     game_mode = input("\nEasy (e), or hard (h)? ").lower()
     if game_mode == 'e':
         game = HangMan(easy_mode(), dev_mode)
     elif game_mode == 'h':
         game = HangMan(hard_mode(), dev_mode)
     
-    game.print_screen_head()
-    game.check_guess(input("\nEnter a letter or guess the whole word: ").lower())
-    game.print_screen_head()
-    
+    # main game loop
+    while game.status == "":
+        game.print_screen_head()
+        print(game.status)
+        game.check_guess(input("\nEnter a letter or guess the whole word: ").lower())
 
+    # End of Game
+    if game.status == "win":
+        print("\nYOU LOSE!")
+        print("\nThe word was "+ "".join(game.secret).upper())
+    elif game.status == "lose":
+        print("\nYOU LOSE!")
+        print("\nThe word was "+ "".join(game.secret).upper())
+    
 
 try:
     dev_mode = False
