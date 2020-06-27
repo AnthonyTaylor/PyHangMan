@@ -1,4 +1,7 @@
 # PyHangMan
+A hangman game written in python and run in the command window
+
+It has a single player and two player mode, and when playing solo has easy or hard difficulty, with your own lists
 
 ## How to set up
 
