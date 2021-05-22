@@ -100,12 +100,18 @@ def main_game(game):
         print("\nThe word was "+ "".join(game.secret).upper())
 
 
-def game_setup(dev_mode = False):
+def game_setup(dev_mode, difficulty):
 
     os.system('cls' if os.name=='nt' else 'clear')
 
+    if difficulty is not None:
+        if difficulty == 'easy':
+            game = HangMan(easy_mode(), dev_mode)
+        if difficulty == 'hard':
+            game = HangMan(hard_mode(), dev_mode)
+
     # Choose player number
-    while True:
+    while True and difficulty is None:
         players = int(input("How many players? (\"1\" or \"2\"): "))
         if players == 1:
             # choose difficulty
@@ -125,17 +131,23 @@ def game_setup(dev_mode = False):
             game = HangMan(secret, dev_mode)
             break
         else:
-                print("Not a valid response, please try again")
-
+            print("Not a valid response, please try again")      
     main_game(game)
 
 
 try:
     dev_mode = False
+    difficulty = None
     if len(sys.argv) == 2 and sys.argv[1] == 'd':
         dev_mode = True
-    game_setup(dev_mode)    
-    input("Press Enter to exit ...")
+    if len(sys.argv) == 2 and sys.argv[1] == 'e':
+        difficulty = 'easy'
+    if len(sys.argv) == 2 and sys.argv[1] == 'h':
+        difficulty = 'hard'
+    game_setup(dev_mode, difficulty)    
+    input("Press Enter to exit ... (then the up arrow and Enter to re-try)")
+    os.system('cls' if os.name=='nt' else 'clear')
 except KeyboardInterrupt:
-    print("\n\nexiting ...")
+    os.system('cls' if os.name=='nt' else 'clear')
+    print("Hangman Exiting ...")
     SystemExit
