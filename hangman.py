@@ -1,6 +1,8 @@
 import os
 import random
 import sys
+import requests
+import json
 
 
 def hard_mode():
@@ -84,6 +86,20 @@ class HangMan:
         pass
 
 
+    def get_definition(self):
+        try: #connecting and loading
+            res = requests.get(f'https://api.dictionaryapi.dev/api/v2/entries/en_GB/{"".join(self.secret)}').content
+            res_dict = json.loads(res)
+        except:
+            return 'Unable to connect to definition service'
+
+        try: #getting definition from dict
+            definition = res_dict[0]['meanings'][0]['definitions'][0]['definition']
+            return definition
+        except:
+            return 'No definition found'
+    
+
 def main_game(game):
     # main game loop
     while game.status == "":
@@ -95,9 +111,11 @@ def main_game(game):
     if game.status == "win":
         print("\nYOU WIN!")
         print("\nThe word was "+ "".join(game.secret).upper())
+        print("Definition: " + game.get_definition())
     elif game.status == "lose":
         print("\nYOU LOSE!")
         print("\nThe word was "+ "".join(game.secret).upper())
+        print("Definition: " + game.get_definition())
 
 
 def game_setup(dev_mode, difficulty):
